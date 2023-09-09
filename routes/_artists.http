@@ -1,0 +1,21 @@
+POST http://localhost:5050/artist/register HTTP/1.1
+Content-Type: application/json
+
+{
+"email": "otto@gmail.com",
+"password": "solimano",
+"name": "Luca and the Solimans",
+"members": "4",
+"region": "Lombardia",
+"city": "Cormano",
+"address": "Via Arno 19",
+"genre": ["soul", "rock", "jazz"],
+"instruments": ["guitar", "piano", "arp"],
+"description" : "prova",
+"lat": "666",
+"lon": "666"
+}
+
+#####
+PATCH http://localhost:5050/artist/64f9db7941f2a0fb64357885/validate HTTP/1.1
+Content-Type: application/json

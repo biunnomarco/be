@@ -8,6 +8,9 @@ const PORT = process.env.PORT;
 
 //require routes
 const provaRoutes = require('./routes/prova')
+const artistsRoutes = require('./routes/artists')
+const localRoutes = require('./routes/locals')
+const loginRoutes = require('./routes/login')
 
 const app = express();
 
@@ -16,7 +19,9 @@ app.use(express.json())
 app.use(cors())
 //use routes
 app.use('/', provaRoutes)
-
+app.use('/', artistsRoutes)
+app.use('/', localRoutes)
+app.use('/', loginRoutes)
 mongoose.connect(process.env.MONGO_URL)
 
 const db = mongoose.connection;
