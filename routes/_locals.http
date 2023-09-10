@@ -15,3 +15,7 @@ Content-Type: application/json
     "lat": "666",
     "lon": "666"
 }
+
+
+#####
+GET http://localhost:5050/local/all
