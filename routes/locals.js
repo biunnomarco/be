@@ -5,6 +5,21 @@ const nodeMailer = require('nodemailer')
 
 const local = express.Router()
 
+//!GET DI TUTTI I LOCALI
+local.get('/local/all', async (req, res) => {
+    try {
+        const locals = await localModel.find()
+        res.status(200).send(locals)
+    } catch (error) {
+        res.status(500).send({
+            statusCode: 500,
+            message: 'Internal server Error',
+            error,
+        })
+    }
+})
+
+
 //! POST DEL LOCALE
 local.post('/local/register', async (req, res) => {
     console.log(req.body)
