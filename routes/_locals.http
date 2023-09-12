@@ -19,3 +19,6 @@ Content-Type: application/json
 
 #####
 GET http://localhost:5050/local/all
+
+#####
+GET http://localhost:5050/local/filter?name=ghiro&favouriteGenre=blues&backline=batteria&localType=pub&region=lombardia&city=milano

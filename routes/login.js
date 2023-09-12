@@ -37,7 +37,10 @@ login.post('/login', async (req, res) => {
         {
             name: user.name,
             email: user.email,
-            id: user._id
+            id: user._id,
+            role: user.role,
+            lat: user.lat,
+            lon: user.lon
 
         }, process.env.JWT_SECRET,
         { expiresIn: '24h' }
