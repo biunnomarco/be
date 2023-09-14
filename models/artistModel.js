@@ -71,6 +71,15 @@ const artistSchemaModel = new mongoose.Schema({
     ],
     description: {
         type: String,
+    },
+    istagram: {
+        type: String,
+    },
+    facebook: {
+        type: String,
+    },
+    webSite: {
+        type: String
     }
 }, { timestamps: true, strict: true })
 

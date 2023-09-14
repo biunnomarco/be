@@ -2,18 +2,22 @@ POST http://localhost:5050/artist/register HTTP/1.1
 Content-Type: application/json
 
 {
-"email": "otto@gmail.com",
+"email": "eelst@gmail.com",
 "password": "solimano",
-"name": "Luca and the Solimans",
-"members": "4",
-"region": "Lombardia",
-"city": "Cormano",
+"name": "Elio e le Storie Tese",
+"members": "5",
+"region": "Liguria",
+"city": "Genova",
 "address": "Via Arno 19",
-"genre": ["soul", "rock", "jazz"],
-"instruments": ["guitar", "piano", "arp"],
-"description" : "prova",
-"lat": "666",
-"lon": "666"
+"genre": ["rock", "demenziale", "progressive", "progressive-metal"],
+"instruments": ["guitar", "piano", "arp", "violin"],
+"description" : "Elio e le Storie Tese (talvolta abbreviato in EelST o Elii) è un gruppo musicale italiano di Milano, fondato da Stefano Elio Belisari nel 1980",
+"lat": "44.4492",
+"lon": "8.8807",
+"instagram" : "www.instagram.com",
+"facebook" : "www.facebook.com",
+"webSite" : "www.google.com",
+"proPic" : "https://www.rollingstone.it/wp-content/uploads/2020/07/elio-e-le-storie-tese.jpg"
 }
 
 #####
@@ -21,7 +25,7 @@ PATCH http://localhost:5050/artist/64f9db7941f2a0fb64357885/validate HTTP/1.1
 Content-Type: application/json
 
 #####
-GET http://localhost:5050/artist/filter?genre=rock&&city=cusano&&name=Mariolino&members=1&region=lombardia&lat=45.5489856&lon=9.1608651&distance=4
+GET http://localhost:5050/artist/allInstruments
 
 #####
-GET http://localhost:5050/artist/filter?name=mariolino&genre=rock&distance=4&lat=45.5489856&lon=9.1608651&instrument=cuoio
+GET http://localhost:5050/artist/filter?genre=rock,MEtal,jazz&instruments=violin,PIANO&name=leprous&members=4&region=lombardia&city=rho&lat=45.5489856&lon=9.1608651&distance=9

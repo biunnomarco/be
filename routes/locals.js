@@ -117,34 +117,35 @@ local.patch('/local/:id/validate', async (req, res) => {
 local.get('/local/filter', async (req, res) => {
     try {
         console.log(req.query)
-        let match = {}
+        let query = {}
         let finalMatch = []
 
         if (req.query.favouriteGenre) {
-            match.favouriteGenre = { $all: [new RegExp(req.query.favouriteGenre, "i")] }
+            const genres = req.query.favouriteGenre.split(',')
+            query.favouriteGenre = { $all: genres.map(g=>new RegExp(g, "i")) }
         }
         if (req.query.name) {
-            match.name = new RegExp(req.query.name, "i")
+            query.name = {$regex: `^${req.query.name}$`, $options: 'i'}
         }
         if (req.query.backline) {
-            match.backline = { $all: [new RegExp(req.query.backline, "i")] }
+            const backline = req.query.backline.split(',')
+            query.backline = { $all: backline.map(b=>new RegExp(b, "i")) }
         }
         if (req.query.localType) {
-            match.localType = new RegExp(req.query.localType, "i")
+            query.localType = {$regex: `^${req.query.localType}$`, $options: 'i'}
         }
         if (req.query.region) {
-            match.region = new RegExp(req.query.region, "i")
+            query.region = {$regex: `^${req.query.region}$`, $options: 'i'}
         }
         if (req.query.city) {
-            match.city = new RegExp(req.query.city, "i")
+            query.city = {$regex: `^${req.query.city}$`, $options: 'i'}
         }
-        console.log(match)
-        const locals = await localModel.aggregate([{ $match: match }])
-        console.log(locals)
-
+        
+        console.log(query)
+        const match = await localModel.find(query)
         
         if (req.query.lat && req.query.lon && req.query.distance)
-            locals.forEach(local => {
+            match.forEach(local => {
                 const dist = DistanceBetween(req.query.lat, req.query.lon, local.lat, local.lon)
                 if (dist <= req.query.distance) {
                     finalMatch.push(local)

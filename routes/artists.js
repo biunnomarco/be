@@ -48,7 +48,8 @@ artist.post('/artist/register', async (req, res) => {
         genre: req.body.genre,
         instruments: req.body.instruments,
         pictures: req.body.pictures,
-        description: req.body.description
+        description: req.body.description,
+        proPic: req.body.proPic,
     })
 
     try {
@@ -90,6 +91,41 @@ artist.get('/artist/all', async (req, res) => {
     }
 })
 
+//!GET ALL GENRES
+artist.get('/artist/allGenres', async (req, res) => {
+    try {
+        const uniqueGenres = await artistModel.aggregate([
+            {$unwind: '$genre'},
+            {$group: {_id: '$genre'}}
+        ])
+        const genresList = uniqueGenres.map(g => g._id)
+        res.status(200).send(genresList)
+    } catch (error) {
+        res.status(500).send({
+            statusCode: 500,
+            message: 'Internal server Error',
+            error,
+        })
+    }
+})
+//!GET ALL INSTUMENTS
+artist.get('/artist/allInstruments', async (req, res) => {
+    try {
+        const uniqueInstruments = await artistModel.aggregate([
+            {$unwind: '$instruments'},
+            {$group: {_id: '$instruments'}}
+        ])
+        const instrumentsList = uniqueInstruments.map(i => i._id)
+        res.status(200).send(instrumentsList)
+    } catch (error) {
+        res.status(500).send({
+            statusCode: 500,
+            message: 'Internal server Error',
+            error,
+        })
+    }
+})
+
 //! VALIDA MAIL
 artist.patch('/artist/:id/validate', async (req, res) => {
     const { id } = req.params;
@@ -114,52 +150,46 @@ artist.patch('/artist/:id/validate', async (req, res) => {
 
 //! GET CON QUERY
 artist.get('/artist/filter', async (req, res) => {
+    let query = {};
+    let finalMatch = [];
+
+    if(req.query.genre) {
+        const genres = req.query.genre.split(',')
+        query.genre = {$all: genres.map(g=>new RegExp(g, 'i'))}
+    }
+    if(req.query.instruments) {
+        const instruments = req.query.instruments.split(',')
+        query.instruments = {$all: instruments.map(i=>new RegExp(i, 'i'))}
+    }
+    if (req.query.name) {
+       query.name = {$text: {$search: req.query.name}}
+        /* query.name = {$regex: `^${req.query.name}$`, $options: 'i'} */
+    }
+    if (req.query.members) {
+        query.members = {$regex: `^${req.query.members}$`, $options: 'i'}
+    }
+    if (req.query.region) {
+        query.region = {$regex: `^${req.query.region}$`, $options: 'i'}
+    }
+    if (req.query.city) {
+        query.city = {$regex: `^${req.query.city}$`, $options: 'i'}
+    }
+    
     try {
-        console.log(req.query)
-        let match = {}
-        let finalMatch = []
-
-        if (req.query.genre) {
-            match.genre = { $all: [new RegExp(req.query.genre, "i")] }
-        }
-        if (req.query.name) {
-            match.name = new RegExp(req.query.name, "i")
-        }
-        if (req.query.instruments) {
-            match.instruments = { $all: [new RegExp(req.query.instruments, "i")] }
-        }
-        if (req.query.members) {
-            match.members = new RegExp(req.query.members, "i")
-        }
-        if (req.query.region) {
-            match.region = new RegExp(req.query.region, "i")
-        }
-        if (req.query.city) {
-            match.city = new RegExp(req.query.city, "i")
-        }
-
-        console.log(match)
-        const artists = await artistModel.aggregate([{ $match: match }])
+        const match = await artistModel.find(query)
 
         if (req.query.lat && req.query.lon && req.query.distance)
-            artists.forEach(artist => {
+            match.forEach(artist => {
                 const dist = DistanceBetween(req.query.lat, req.query.lon, artist.lat, artist.lon)
                 if (dist <= req.query.distance) {
                     finalMatch.push(artist)
                 }
                 console.log(dist)
             });
-
         res.status(200).send(finalMatch)
     } catch (error) {
-        res.status(500).send({
-            statusCode: 500,
-            message: 'Internal server Error',
-            error,
-        })
+        
     }
 })
-
-
 
 module.exports = artist;

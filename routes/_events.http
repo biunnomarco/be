@@ -1,0 +1,18 @@
+POST http://localhost:5050/event/newEvent HTTP/1.1
+Content-Type: application/json
+
+{
+    "location" : "64fc7b2d4534c8c1383734d8",
+    "name" : "Serata danzante",
+    "description" : "Una serata in compagnia della musica da balera",
+    "genres" : ["liscio", "waltzer"],
+    "requiredArtist" : "Band",
+    "refund" : "Non sono previsti rimborsi spesa",
+    "benefits" : "Cena e consumazione incluse",
+    "duration" : "2h",
+    "date" : "14/04"
+}
+
+#####
+GET http://localhost:5050/event/allEvents
+

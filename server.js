@@ -11,6 +11,7 @@ const provaRoutes = require('./routes/prova')
 const artistsRoutes = require('./routes/artists')
 const localRoutes = require('./routes/locals')
 const loginRoutes = require('./routes/login')
+const eventRoutes = require('./routes/events')
 
 const app = express();
 
@@ -22,6 +23,7 @@ app.use('/', provaRoutes)
 app.use('/', artistsRoutes)
 app.use('/', localRoutes)
 app.use('/', loginRoutes)
+app.use('/', eventRoutes)
 mongoose.connect(process.env.MONGO_URL)
 
 const db = mongoose.connection;

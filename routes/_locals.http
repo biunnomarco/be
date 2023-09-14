@@ -21,4 +21,4 @@ Content-Type: application/json
 GET http://localhost:5050/local/all
 
 #####
-GET http://localhost:5050/local/filter?name=ghiro&favouriteGenre=blues&backline=batteria&localType=pub&region=lombardia&city=milano
+GET http://localhost:5050/local/filter?favouriteGenre=blues,jazz&backline=chitarra,arpa&localType=pub&region=lombardia&city=milano&lat=666&lon=666&distance=1&name=

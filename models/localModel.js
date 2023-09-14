@@ -51,7 +51,7 @@ const localSchemaModel = new mongoose.Schema({
     reviews: [
         {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'Reviews',
+            ref: 'Review',
             default: [],
         }
     ],
@@ -72,10 +72,19 @@ const localSchemaModel = new mongoose.Schema({
     events: [
         {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'Events',
+            ref: 'Event',
             default: [],
         }
-    ]
+    ],
+    istagram: {
+        type: String,
+    },
+    facebook: {
+        type: String,
+    },
+    webSite: {
+        type: String
+    }
 
 }, { timestamps: true, strict: true })
 
