@@ -147,11 +147,28 @@ artist.patch('/artist/:id/validate', async (req, res) => {
     }
 })
 
+//! GET ARTIST BY ID
+artist.get('/artist/byId/:id', async (req, res) => {
+    const {id} = req.params;
+    try {
+        const artist = await artistModel.findById(id)
+        res.status(200).send(artist)
+    } catch (error) {
+        res.status(500).send({
+            statusCode: 500,
+            message: "Internal server error",
+            error
+        })
+    }
+})
 
 //! GET CON QUERY
+
 artist.get('/artist/filter', async (req, res) => {
     let query = {};
     let finalMatch = [];
+
+    console.log(req.query)
 
     if(req.query.genre) {
         const genres = req.query.genre.split(',')
@@ -162,8 +179,7 @@ artist.get('/artist/filter', async (req, res) => {
         query.instruments = {$all: instruments.map(i=>new RegExp(i, 'i'))}
     }
     if (req.query.name) {
-       query.name = {$text: {$search: req.query.name}}
-        /* query.name = {$regex: `^${req.query.name}$`, $options: 'i'} */
+        query.name = {$regex: new RegExp(req.query.name, 'i')}
     }
     if (req.query.members) {
         query.members = {$regex: `^${req.query.members}$`, $options: 'i'}
@@ -188,7 +204,7 @@ artist.get('/artist/filter', async (req, res) => {
             });
         res.status(200).send(finalMatch)
     } catch (error) {
-        
+        res.status(500).send(error)
     }
 })
 

@@ -25,7 +25,7 @@ PATCH http://localhost:5050/artist/64f9db7941f2a0fb64357885/validate HTTP/1.1
 Content-Type: application/json
 
 #####
-GET http://localhost:5050/artist/allInstruments
+GET http://localhost:5050/artist/filter?name=gesu
 
 #####
 GET http://localhost:5050/artist/filter?genre=rock,MEtal,jazz&instruments=violin,PIANO&name=leprous&members=4&region=lombardia&city=rho&lat=45.5489856&lon=9.1608651&distance=9

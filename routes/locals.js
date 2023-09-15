@@ -2,6 +2,7 @@ const express = require('express')
 const mongoose = require('mongoose')
 const localModel = require('../models/localModel')
 const nodeMailer = require('nodemailer')
+const proPic = require('../middlewares/uploadProPic')
 
 const local = express.Router()
 
@@ -31,6 +32,25 @@ local.get('/local/all', async (req, res) => {
     }
 })
 
+//!GET LOCAL BY ID
+local.get('/local/byId/:id', async(req, res) => {
+    const {id} = req.params;
+    try {
+        const local = await localModel.findById(id).populate({
+            path: 'events',
+            populate: {
+                path: 'location'
+            }
+        })
+        res.status(200).send(local)
+    } catch (error) {
+        res.status(500).send({
+            statusCode: 500,
+            message: 'Internal server Error',
+            error,
+        })
+    }
+})
 
 //! POST DEL LOCALE
 local.post('/local/register', async (req, res) => {
@@ -159,6 +179,25 @@ local.get('/local/filter', async (req, res) => {
             statusCode: 500,
             message: 'Internal server Error',
             error,
+        })
+    }
+})
+
+//!PATCH LOCAL AVATAR
+local.patch('/local/changeProPic/:id', proPic.single('proPic'), async (req,res) => {
+    const {id} = req.params;
+    try {
+        console.log(req.file.path)
+        const dataToUpdate = req.file.path;
+        const options = {new: true};
+        const result = await localModel.findByIdAndUpdate(id, {proPic: dataToUpdate}, options)
+
+        req.status(200).send(result)
+    } catch (error) {
+        res.status(500).send({
+            statusCode: 500,
+            message: "Internal server error"
+            , error
         })
     }
 })
