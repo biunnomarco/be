@@ -12,6 +12,7 @@ const artistsRoutes = require('./routes/artists')
 const localRoutes = require('./routes/locals')
 const loginRoutes = require('./routes/login')
 const eventRoutes = require('./routes/events')
+const reviewRoutes = require('./routes/reviews')
 
 const app = express();
 
@@ -24,6 +25,7 @@ app.use('/', artistsRoutes)
 app.use('/', localRoutes)
 app.use('/', loginRoutes)
 app.use('/', eventRoutes)
+app.use('/', reviewRoutes)
 mongoose.connect(process.env.MONGO_URL)
 
 const db = mongoose.connection;

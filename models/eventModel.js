@@ -34,7 +34,7 @@ const eventSchemaModel = new mongoose.Schema({
     },
     candidates: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Artist',
+        ref: 'Candidate',
     }],
     date: {
         type: String,

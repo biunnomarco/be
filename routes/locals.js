@@ -53,8 +53,9 @@ local.get('/local/byId/:id', async(req, res) => {
 })
 
 //! POST DEL LOCALE
-local.post('/local/register', async (req, res) => {
+local.post('/local/register', proPic.single('proPic'), async (req, res) => {
     console.log(req.body)
+    console.log(req.file)
 
     //* nodemailer transporter
     const transporter = nodeMailer.createTransport({
@@ -74,16 +75,19 @@ local.post('/local/register', async (req, res) => {
         email: req.body.email,
         password: req.body.password,
         name: req.body.name,
+        favouriteGenre: req.body.favouriteGenre,
         region: req.body.region,
         city: req.body.city,
+        localType: req.body.localType,
         address: req.body.address,
+        backline: req.body.backline,
         lat: req.body.lat,
         lon: req.body.lon,
-        pictures: req.body.pictures,
         description: req.body.description,
-        localType: req.body.localType,
-        favouriteGenre: req.body.favouriteGenre,
-        backline: req.body.backline
+        proPic: req.file.path,
+        instagram: req.body.instagram,
+        facebook: req.body.facebook,
+        pictures: req.body.pictures,
     })
 
     try {
@@ -145,7 +149,7 @@ local.get('/local/filter', async (req, res) => {
             query.favouriteGenre = { $all: genres.map(g=>new RegExp(g, "i")) }
         }
         if (req.query.name) {
-            query.name = {$regex: `^${req.query.name}$`, $options: 'i'}
+            query.name = {$regex: new RegExp(req.query.name, 'i')}
         }
         if (req.query.backline) {
             const backline = req.query.backline.split(',')

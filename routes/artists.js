@@ -2,6 +2,7 @@ const express = require('express')
 const mongoose = require('mongoose')
 const artistModel = require('../models/artistModel')
 const nodeMailer = require('nodemailer');
+const proPic = require('../middlewares/uploadProPic')
 
 const artist = express.Router();
 
@@ -18,8 +19,7 @@ const DistanceBetween = (lat1, lon1, lat2, lon2) => {
 }
 
 //!POST DELL'ARTISTA
-artist.post('/artist/register', async (req, res) => {
-    console.log(req.body)
+artist.post('/artist/register', proPic.single('proPic'), async (req, res) => {
 
     //* nodemailer transporter
     const transporter = nodeMailer.createTransport({
@@ -38,18 +38,20 @@ artist.post('/artist/register', async (req, res) => {
     const newArtist = new artistModel({
         email: req.body.email,
         password: req.body.password,
-        name: req.body.name,
         members: req.body.members,
+        name: req.body.name,
+        genre: req.body.genre,
         region: req.body.region,
         city: req.body.city,
         address: req.body.address,
+        instruments: req.body.instruments,
         lat: req.body.lat,
         lon: req.body.lon,
-        genre: req.body.genre,
-        instruments: req.body.instruments,
-        pictures: req.body.pictures,
         description: req.body.description,
-        proPic: req.body.proPic,
+        pictures: req.file.path,
+        proPic: req.file.path,
+        instagram: req.body.instagram,
+        facebook: req.body.facebook,
     })
 
     try {
@@ -151,7 +153,12 @@ artist.patch('/artist/:id/validate', async (req, res) => {
 artist.get('/artist/byId/:id', async (req, res) => {
     const {id} = req.params;
     try {
-        const artist = await artistModel.findById(id)
+        const artist = await artistModel.findById(id).populate({
+            path: 'reviews',
+            populate: {
+                path: 'author'
+            }
+        })
         res.status(200).send(artist)
     } catch (error) {
         res.status(500).send({
@@ -200,7 +207,6 @@ artist.get('/artist/filter', async (req, res) => {
                 if (dist <= req.query.distance) {
                     finalMatch.push(artist)
                 }
-                console.log(dist)
             });
         res.status(200).send(finalMatch)
     } catch (error) {

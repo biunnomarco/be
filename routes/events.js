@@ -2,12 +2,13 @@ const express = require('express')
 const mongoose = require('mongoose')
 const eventModel = require('../models/eventModel');
 const localModel = require('../models/localModel');
+const candidateModel = require('../models/candidateModel');
 
 const event = express.Router();
 
 //!POST DELL'EVENTO
 event.post('/event/newEvent', async(req, res) => {
-    console.log(req.body)
+    
     const local = await localModel.findById(req.body.location)
     const newEvent = new eventModel({
         location: req.body.location,
@@ -39,7 +40,7 @@ event.post('/event/newEvent', async(req, res) => {
 //!GET TUTTI EVENTI
 event.get('/event/allEvents', async (req, res) => {
     try {
-        const events = await eventModel.find().populate('location');
+        const events = await eventModel.find().populate('location').populate('candidates');
         res.status(200).send(events)
     } catch (error) {
         res.status(500).send({
@@ -50,4 +51,74 @@ event.get('/event/allEvents', async (req, res) => {
     } 
 })
 
+//! CANDIDATURA
+event.post('/event/candidate', async (req, res) => {
+    
+    const eventId = req.query.eventId
+    const artistId = req.query.artistId
+    const event = await eventModel.findById(eventId)
+    console.log(event.location)
+    const newCandidate = new candidateModel({
+        artist: artistId,
+        event: eventId,
+        cachet: req.body.cachet,
+        note: req.body.note,
+        local: event.location
+    })
+    
+    try {
+        const candidate = await newCandidate.save()
+        await event.updateOne({$push: {candidates: newCandidate}})
+    
+        res.status(200).send(candidate)
+    } catch (error) {
+        res.status(500).send({
+            statusCode: 500,
+            message: 'Internal server Error',
+            error,
+        })
+    }
+})
+
+//!GET EVENT BY ID
+event.get('/event/eventById/:id', async (req, res) => {
+    const {id} = req.params
+    try {
+        const event = await eventModel.findById(id).populate('location').populate('candidates');
+        res.status(200).send(event)
+    } catch (error) {
+        res.status(500).send({
+            statusCode: 500,
+            message: 'Internal server Error',
+            error,
+        })
+    } 
+})
+
+//!GET CANDIDATURE BY ARTISTID
+event.get('/event/artistCandidature/:artistId', async (req, res) => {
+    const {artistId} = req.params
+    try {
+        const candidatures = await candidateModel.find({artist: artistId}).populate('local').populate('event')
+        res.status(200).send(candidatures)
+    } catch (error) {
+        res.status(500).send({
+            statusCode: 500,
+            message: 'Internal server Error',
+            error,
+        })
+    }
+})
+
+//!ANNULLA LA CANDIDATURA
+event.get('/event/removeCandidature/:eventId/:artistId', async (req, res) => {
+    const {eventId, artistId} = req.params
+    try {
+        const event = await eventModel.findById(eventId).populate('candidates')
+        
+        res.status(200).send(event)
+    } catch (error) {
+        
+    }
+})
 module.exports = event
