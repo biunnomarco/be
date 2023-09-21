@@ -111,14 +111,20 @@ event.get('/event/artistCandidature/:artistId', async (req, res) => {
 })
 
 //!ANNULLA LA CANDIDATURA
-event.get('/event/removeCandidature/:eventId/:artistId', async (req, res) => {
-    const {eventId, artistId} = req.params
+event.delete('/event/removeCandidature/:eventId/:candidatureId', async (req, res) => {
+    const {eventId, candidatureId} = req.params
+    
+    const event = await eventModel.findById(eventId)
     try {
-        const event = await eventModel.findById(eventId).populate('candidates')
-        
+        const candidature = await candidateModel.findByIdAndDelete(candidatureId)
+        await event.updateOne({$pull: {candidates: candidatureId}})
         res.status(200).send(event)
     } catch (error) {
-        
+        res.status(500).send({
+            statusCode: 500,
+            message: 'Internal server Error',
+            error,
+        })
     }
 })
 module.exports = event

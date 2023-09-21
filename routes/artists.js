@@ -156,7 +156,7 @@ artist.get('/artist/byId/:id', async (req, res) => {
         const artist = await artistModel.findById(id).populate({
             path: 'reviews',
             populate: {
-                path: 'author'
+                path: 'authorLocal'
             }
         })
         res.status(200).send(artist)

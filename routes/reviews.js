@@ -16,7 +16,8 @@ review.post('/review/:id', async (req, res) => {
     const newReview = new reviewsModel({
         rate: req.body.rate,
         comment: req.body.comment,
-        author: req.body.author
+        authorArtist: req.body.authorArtist,
+        authorLocal: req.body.authorLocal,
     })
     try {
         const review = await newReview.save()

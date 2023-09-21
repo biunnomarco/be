@@ -11,9 +11,14 @@ const reviewsSchemaModel = new mongoose.Schema({
         type: String,
         required: true,
     },
-    author: {
+    authorArtist: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Artist' && 'Local',
+        ref: 'Artist',
+        default: [],
+    },
+    authorLocal: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Local',
         default: [],
     }
 }, { timestamps: true, strict: true })

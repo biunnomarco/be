@@ -40,7 +40,9 @@ login.post('/login', async (req, res) => {
             id: user._id,
             role: user.role,
             lat: user.lat,
-            lon: user.lon
+            lon: user.lon,
+            proPic: user.proPic,
+            isValid: user.isValid,
 
         }, process.env.JWT_SECRET,
         { expiresIn: '24h' }

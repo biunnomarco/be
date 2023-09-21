@@ -40,6 +40,17 @@ local.get('/local/byId/:id', async(req, res) => {
             path: 'events',
             populate: {
                 path: 'location'
+            },
+            populate: {
+                path: "candidates",
+                populate: {
+                    path: 'artist'
+                }
+            }
+        }).populate({
+            path: 'reviews',
+            populate: {
+                path: 'authorArtist'
             }
         })
         res.status(200).send(local)
@@ -156,13 +167,13 @@ local.get('/local/filter', async (req, res) => {
             query.backline = { $all: backline.map(b=>new RegExp(b, "i")) }
         }
         if (req.query.localType) {
-            query.localType = {$regex: `^${req.query.localType}$`, $options: 'i'}
+            query.localType = {$regex: new RegExp(req.query.localType, 'i')}
         }
         if (req.query.region) {
-            query.region = {$regex: `^${req.query.region}$`, $options: 'i'}
+            query.region = {$regex: new RegExp(req.query.region, 'i')}
         }
         if (req.query.city) {
-            query.city = {$regex: `^${req.query.city}$`, $options: 'i'}
+            query.city = {$regex: new RegExp(req.query.city, 'i')}
         }
         
         console.log(query)

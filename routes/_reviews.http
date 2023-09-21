@@ -1,8 +1,8 @@
-POST http://localhost:5050/review/64fc7b2d4534c8c1383734d8 HTTP/1.1
+POST http://localhost:5050/review/6505ef7362e4eecee5517517 HTTP/1.1
 Content-Type: application/json
 
 {
     "rate" : 5,
-    "comment" : "Sono stati bravissimi!! Hanno accompagnato tutta la cerimonia (matrimonio di mia figlia) con il loro inconfodibile sound death-metal ed il mistico growl di Michelino! Consigliatissimi",
-    "author" : "65006a399046ad91e5e54642"
+    "comment" : "Bel posto",
+    "authorArtist" : "65058a6bd8f2f05963fab112"
 }
