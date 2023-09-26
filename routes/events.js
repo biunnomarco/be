@@ -84,7 +84,12 @@ event.post('/event/candidate', async (req, res) => {
 event.get('/event/eventById/:id', async (req, res) => {
     const {id} = req.params
     try {
-        const event = await eventModel.findById(id).populate('location').populate('candidates');
+        const event = await eventModel.findById(id).populate('location').populate({
+            path: 'candidates',
+            populate: {
+                path: 'artist'
+            }
+        });
         res.status(200).send(event)
     } catch (error) {
         res.status(500).send({

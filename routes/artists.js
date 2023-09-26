@@ -62,7 +62,7 @@ artist.post('/artist/register', proPic.single('proPic'), async (req, res) => {
             from: 'gigmeservice@zohomail.eu',
             to: req.body.email,
             subject: "Verify your mail",
-            html: `<a href='${process.env.CLIENT}/validator/${artist._id}'>Verify</a>`
+            html: `<a href='${process.env.CLIENT}/artistValidator/${artist._id}'>Verify</a>`
         })
 
         res.status(201).send({
