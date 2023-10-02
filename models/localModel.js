@@ -76,7 +76,7 @@ const localSchemaModel = new mongoose.Schema({
             default: [],
         }
     ],
-    istagram: {
+    instagram: {
         type: String,
     },
     facebook: {
